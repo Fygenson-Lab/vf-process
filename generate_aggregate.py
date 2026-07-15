@@ -24,8 +24,11 @@ import numpy
 import os
 import pandas
 # ---------------------------------------------------------------------------------------------------- #
+#
 # GLOBAL VARIABLES
-#                  = [R"Documents/nanostar/concentration_folder", ...]
+#
+# ---------------------------------------------------------------------------------------------------- #
+#                  = [R"~/nanostar/concentration_folder", ...]
 PARENT_DIRECTORIES = [
 
 ]
