@@ -14,12 +14,18 @@
 #   Last Updated: 7/15/2026
 #
 # ---------------------------------------------------------------------------------------------------- #
+#
+#   Creates .csv log, where each row corresponds with the average data of an analysis log,
+#   excluding filtered drops. Requires bcds-engine analysis log outputs in
+#   <parent>/logs/analysis_logs/
+#
+# ---------------------------------------------------------------------------------------------------- #
 import numpy
 import os
 import pandas
 # ---------------------------------------------------------------------------------------------------- #
 # GLOBAL VARIABLES
-#                  = [R"~Documents/nanostar/concentration_folder", ...]
+#                  = [R"Documents/nanostar/concentration_folder", ...]
 PARENT_DIRECTORIES = [
 
 ]
