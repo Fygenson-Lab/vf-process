@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------------------------------- #
 #
-#   generate_aggregate.csv
+#   generate_aggregate.py
 #
 # ---------------------------------------------------------------------------------------------------- #
 #
@@ -61,6 +61,7 @@ def calculateMeanAndSE(Column_Data : numpy.ndarray) -> tuple[float, float]:
     >>> print(f"Mean: {mean:.4f}, Standard Error: {standard_error:.4f}})
     Mean: 2.0000, Standard Error: 0.7071
     '''
+
     Column_Data = Column_Data[numpy.isfinite(Column_Data)] # filtering NaN and inf
     value_count = int(Column_Data.size)
     if value_count < 1:
