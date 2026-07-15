@@ -116,7 +116,7 @@ def readCsvRows(
         return pandas.DataFrame()
 # ---------------------------------------------------------------------------------------------------- #
 #
-#   Aggregate CSV Generation
+#   AGGREGATE CSV GENERATION
 #
 # ---------------------------------------------------------------------------------------------------- #
 def createAggregateCsv(
