@@ -11,7 +11,7 @@
 #   Project Guidance                |    Thomas Reese
 #   make_aggregate_csv.py           |    Tyler Frischknecht
 #   -------------------------------------------------------
-#   Last Updated: 7/15/2026
+#   Last Updated: 7/20/2026
 #
 # ---------------------------------------------------------------------------------------------------- #
 #
@@ -281,7 +281,16 @@ def main() -> None:
         if not os.path.exists(os.path.join(parent_directory, 'logs')):
             print("Skipping invalid directory: ", parent_directory)
             continue
-        createAggregateCsv(parent_directory)
+        createAggregateCsv(
+            parent_directory,
+            VOLUME_FRACTION_HEADER,
+            A_HEADER,
+            B_HEADER,
+            DILUTE_RADIUS_HEADER,
+            DENSE_RADIUS_HEADER,
+            SIGMA_HEADER,
+            DROP_INCLUDE_HEADER
+        )
         print("Successfully created aggregate.csv for ", os.path.join(parent_directory))
 # -------------------------------------------------- #
 if __name__ == "__main__":
