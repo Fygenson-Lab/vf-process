@@ -25,7 +25,7 @@ import os
 import pandas
 # ---------------------------------------------------------------------------------------------------- #
 #
-# GLOBAL VARIABLES
+#   GLOBAL VARIABLES
 #
 # ---------------------------------------------------------------------------------------------------- #
 #                  = [R"~/nanostar/concentration_folder", ...]
@@ -39,6 +39,7 @@ A_HEADER =                  "a_ds_psf"
 B_HEADER =                  "b_ds_psf"
 DILUTE_RADIUS_HEADER =      "dilute_radius_nearest_neighbor"
 DENSE_RADIUS_HEADER =       "dense_radius_ds_psf"
+SIGMA_HEADER =              "sigma_ds_psf"
 DROP_INCLUDE_HEADER =       "include"
 # ---------------------------------------------------------------------------------------------------- #
 #
@@ -131,12 +132,13 @@ def readCsvRows(
 # ---------------------------------------------------------------------------------------------------- #
 def createAggregateCsv(
     Parent_Directory : os.PathLike | str,
-    Volume_Fraction_Header : str =  VOLUME_FRACTION_HEADER,
-    A_Header : str =                A_HEADER,
-    B_Header : str =                B_HEADER,
-    Dilute_Radius_Header : str =    DILUTE_RADIUS_HEADER,
-    Dense_Radius_Header : str =     DENSE_RADIUS_HEADER,
-    Drop_Include_Header : str =     DROP_INCLUDE_HEADER,
+    Volume_Fraction_Header : str,
+    A_Header : str,
+    B_Header : str,
+    Dilute_Radius_Header : str,
+    Dense_Radius_Header : str,
+    Sigma_Header : str,
+    Drop_Include_Header : str,
     Output_Location : str =         "aggregate.csv",
     Output_Absolute_Path : bool =   False
 ) -> None:
@@ -151,25 +153,28 @@ def createAggregateCsv(
     ----------
     `Parent_Directory` : *os.PathLike* | *str*
         - Points to a single concentration directory.
-    `Volume_Fraction_Header` : *str*, optional
+    `Volume_Fraction_Header` : *str*
         - Header name for volume fraction in an analysis log.
-    `A_Header` : *str*, optional
+    `A_Header` : *str*
         - Header name for the first fitting parameter of the double sphere function in an \
         analysis log. Used for A/B ratios. 
-    `B_Header` : *str*, optional
+    `B_Header` : *str*
         - Header name for the second fitting parameter of the double sphere function in an \
         analysis log. Used for A/B ratios. 
-    `Dilute_Radius_Header` : *str*, optional
+    `Dilute_Radius_Header` : *str*
         - Header name for dilute radius in an analysis log. Used for volume fraction calculation.
-    `Dense_Radius_Header` : *str*, optional
+    `Dense_Radius_Header` : *str*
         - Header name for dense radius in an analysis log. Used for volume fraction calculation.
-    `Drop_Include_Header` : *str*, optional
+    `Sigma_Header` : *str*
+        - Header name for characteristic width of the point spread function as calculated in \
+        bcds-engine. Used to filter lever-rule fits in phase diagram generation on account of blur.
+    `Drop_Include_Header` : *str*
         - Header name for a filter column. Any drops not marked '1' will not be incorporated in \
         aggregate calculations.
-    `Output_Location` : *str*, optional
+    `Output_Location` : *str*
         - Name for the aggregate csv generated, to be placed in ~/logs/<Output_Location>, unless \
         Output_Absolute_Path is True.
-    `Output_Absolute_Path` : *bool*, optional
+    `Output_Absolute_Path` : *bool*
         - When True, treats Output_Location as an absolute path, and does not route to \
         ~/logs/<Output_Location>
     
@@ -251,10 +256,10 @@ def createAggregateCsv(
 
     headers_list = [
         "source_file",
-        "avg_dense_volume_fraction",    "volume_fraction_std_err",
-        "average_a_over_b",             "a_over_b_std_err",
-        "average_dilute_radius",        "dilute_radius_std_err",
-        "average_dense_radius",         "dense_radius_std_err",
+        "average_dense_volume_fraction",    "volume_fraction_std_err",
+        "average_a_over_b",                 "a_over_b_std_err",
+        "average_dilute_radius",            "dilute_radius_std_err",
+        "average_dense_radius",             "dense_radius_std_err",
         "drops_passing_filter",
         "total_drop_count",
     ]
