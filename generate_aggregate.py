@@ -139,8 +139,8 @@ def createAggregateCsv(
     Dense_Radius_Header : str,
     Sigma_Header : str,
     Drop_Include_Header : str,
-    Output_Location : str =         "aggregate.csv",
-    Output_Absolute_Path : bool =   False
+    Output_Location : str = "aggregate.csv",
+    Output_Absolute_Path : bool = False
 ) -> None:
     '''
     # createAggregateCsv
@@ -205,9 +205,16 @@ def createAggregateCsv(
         )
     ])
 
+    populated_analysis_log_paths = []
     output_rows = []
 
     for file_path in all_analysis_logs_paths:
+
+        with open(file_path, "r") as file:
+            if not file.read().strip():
+                # empty file, no error
+                continue
+
         data_frame = readCsvRows(file_path)
 
         if (
@@ -215,10 +222,16 @@ def createAggregateCsv(
             A_Header not in data_frame.columns or
             B_Header not in data_frame.columns or
             Dilute_Radius_Header not in data_frame.columns or
-            Dense_Radius_Header not in data_frame.columns
+            Dense_Radius_Header not in data_frame.columns or
+            Sigma_Header not in data_frame.columns
         ):
             print("Required header(s) missing from " + file_path)
             continue
+        
+        populated_analysis_log_paths.append(file_path)
+        
+    for file_path in populated_analysis_log_paths:
+        data_frame = readCsvRows(file_path)
 
         row_count = int(data_frame.shape[0])
             
@@ -230,6 +243,7 @@ def createAggregateCsv(
         if data_frame.empty:
             output_rows.append([
                 os.path.basename(file_path),
+                numpy.nan, numpy.nan,
                 numpy.nan, numpy.nan,
                 numpy.nan, numpy.nan,
                 numpy.nan, numpy.nan,
@@ -250,6 +264,7 @@ def createAggregateCsv(
             *calculateMeanAndSE(all_a_over_b),
             *calculateMeanAndSE(data_frame[Dilute_Radius_Header].astype(float).to_numpy()),
             *calculateMeanAndSE(data_frame[Dense_Radius_Header].astype(float).to_numpy()),
+            *calculateMeanAndSE(data_frame[Sigma_Header].astype(float).to_numpy()),
             passing_filter_count,
             row_count
         ])
@@ -260,6 +275,7 @@ def createAggregateCsv(
         "average_a_over_b",                 "a_over_b_std_err",
         "average_dilute_radius",            "dilute_radius_std_err",
         "average_dense_radius",             "dense_radius_std_err",
+        "average_sigma",                    "sigma_std_err",
         "drops_passing_filter",
         "total_drop_count",
     ]
@@ -282,16 +298,16 @@ def main() -> None:
             print("Skipping invalid directory: ", parent_directory)
             continue
         createAggregateCsv(
-            parent_directory,
-            VOLUME_FRACTION_HEADER,
-            A_HEADER,
-            B_HEADER,
-            DILUTE_RADIUS_HEADER,
-            DENSE_RADIUS_HEADER,
-            SIGMA_HEADER,
-            DROP_INCLUDE_HEADER
+                parent_directory,
+                VOLUME_FRACTION_HEADER,
+                A_HEADER,
+                B_HEADER,
+                DILUTE_RADIUS_HEADER,
+                DENSE_RADIUS_HEADER,
+                SIGMA_HEADER,
+                DROP_INCLUDE_HEADER
         )
-        print("Successfully created aggregate.csv for ", os.path.join(parent_directory))
+        print("Successfully created aggregate.csv for ", os.path.basename(parent_directory))
 # -------------------------------------------------- #
 if __name__ == "__main__":
     main()
